@@ -24,10 +24,6 @@
 #define max(a,b) ((a)>(b)?(a):(b))
 #define min(a,b) ((a)<(b)?(a):(b))
 
-/* GCC 12.2.20 */
-#define srandom(a) srand(a)
-#define random() rand()
-
 struct timeval  tp;
 struct timezone tzp;
 
@@ -368,8 +364,13 @@ INLINE static DATA_TYPE * mergesort_nr_2(DATA_TYPE *Buffer1,
 					 DATA_TYPE *Buffer2,
 					 int col_size) {
 
+#if 0
 #define MAX_VAL LONG_MAX 
 #define MAX_VAL_m1 (MAX_VAL - 1)
+#else
+  long MAX_VAL = LONG_MAX;
+  long MAX_VAL_m1 = (MAX_VAL - 1);
+#endif
 
   int
     i, j, k,
@@ -384,7 +385,6 @@ INLINE static DATA_TYPE * mergesort_nr_2(DATA_TYPE *Buffer1,
     *temp_ptr,
     *ex_ptr,
     *s1_ptr, *s2_ptr;
-
 
   start_ptr = Buffer1;
   finish_ptr = Buffer2;
