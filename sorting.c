@@ -1415,6 +1415,86 @@ INLINE static void bubbleSort(int N, int* A)
 }
 
 
+/*************************************************************************/
+
+INLINE static void selectionSort(int N, int* A)
+{
+  register int i, j, minIndex, temp;
+  
+  for (i = 0; i < N - 1; i++) {
+    minIndex = i;
+    for (j = i + 1; j < N; j++) {
+      if (A[j] < A[minIndex])
+	minIndex = j;
+    }
+    temp = A[minIndex];
+    A[minIndex] = A[i];
+    A[i] = temp;
+  }
+}
+
+/*************************************************************************/
+
+INLINE static void insertionSort2(int N, int* A)
+{
+  register int i, j, key;
+  
+  for (i = 1; i < N; i++) {
+    key = A[i];
+    j = i - 1;
+    while (j >= 0 && A[j] > key) {
+      A[j + 1] = A[j];
+      j = j - 1;
+    }
+    A[j + 1] = key;
+  }
+}
+
+ 
+
+/*************************************************************************/
+
+void swap_3(int* a, int* b) {
+  int temp = *a;
+  *a = *b;
+  *b = temp;
+}
+
+int partition(int* A, int low, int high) {
+  register int i, j;
+  register int pivot = A[high];
+
+  i = (low - 1);
+
+  for (j = low; j <= high - 1; j++) {
+    if (A[j] <= pivot) {
+      i++;
+      swap_3(&A[i], &A[j]);
+    }
+  }
+  swap_3(&A[i + 1], &A[high]);
+  return (i + 1);
+}
+
+
+void quickSort_3(int* A, int low, int high) {
+  register int pi;
+  
+  if (low < high) {
+    pi = partition(A, low, high);
+    quickSort_3(A, low, pi - 1);
+    quickSort_3(A, pi + 1, high);
+  }
+}
+
+INLINE static void run_quickSort_3(int N, int* A) {
+  register int pi;
+  
+  pi = partition(A, 0, N-1);
+  quickSort_3(A, 0, pi - 1);
+  quickSort_3(A, pi + 1, N-1);
+}
+
 
 /*************************************************************************/
 
@@ -1858,6 +1938,81 @@ main(int argc, char **argv) {
   total_time /= (double)LOOP_CNT;
 
   fprintf(stdout," elems: %12d \t  bubblesort: %f\n",
+	  elems,total_time);
+
+/******************************************************************/
+
+/******************************************************************/
+
+  total_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    selectionSort(elems,list);
+  }
+  total_time = get_seconds() - total_time;
+  err = check_sort(list,elems);
+  if (!err) fprintf(stderr,"ERROR with selectionSort\n");
+
+  over_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+  }
+  over_time = get_seconds() - over_time;
+
+  total_time -= over_time;
+  total_time /= (double)LOOP_CNT;
+
+  fprintf(stdout," elems: %12d \t  selectsort: %f\n",
+	  elems,total_time);
+
+/******************************************************************/
+
+/******************************************************************/
+
+  total_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    insertionSort2(elems,list);
+  }
+  total_time = get_seconds() - total_time;
+  err = check_sort(list,elems);
+  if (!err) fprintf(stderr,"ERROR with insertionSort2\n");
+
+  over_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+  }
+  over_time = get_seconds() - over_time;
+
+  total_time -= over_time;
+  total_time /= (double)LOOP_CNT;
+
+  fprintf(stdout," elems: %12d \t insertsort2: %f\n",
+	  elems,total_time);
+
+/******************************************************************/
+
+/******************************************************************/
+
+  total_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    run_quickSort_3(elems,list);
+  }
+  total_time = get_seconds() - total_time;
+  err = check_sort(list,elems);
+  if (!err) fprintf(stderr,"ERROR with quickSort3\n");
+
+  over_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+  }
+  over_time = get_seconds() - over_time;
+
+  total_time -= over_time;
+  total_time /= (double)LOOP_CNT;
+
+  fprintf(stdout," elems: %12d \t  quicksort3: %f\n",
 	  elems,total_time);
 
 /******************************************************************/
