@@ -7,7 +7,7 @@
 #include <strings.h>
 
 #define DEFAULT_ELEMS  25
-#define LOOP_CNT      100
+#define LOOP_CNT       25
 #define SORT_CUTOFF   100
 
 /* #define DO_ISORT        0 */
@@ -49,6 +49,7 @@ int check_sort(int *list, int n) {
 	      i,i-1, list[i],list[i-1]);
       val = 0;
     }
+
   return val;
 }
 
@@ -110,7 +111,7 @@ static INLINE void radixsort_3(int *a, int n) {
     for (j=1 ; j<M ; j++) count[j] += count[j-1];
     for (i=n-1 ; i>=0 ; i--) b[--count[bitArr[i]]] = a[i];
 
-    memmove(b,a,n*sizeof(int));
+    bcopy(b,a,n*sizeof(int));
 
     free(count);
 }
@@ -169,7 +170,7 @@ static INLINE void radixsort_3_rev(int *a, int n) {
     count[0] = 0;
     for (i=0 ; i<n ; i++) b[count[bitArr[i]]++] = a[i];
 
-    memmove(b,a,n*sizeof(int));
+    bcopy(b,a,n*sizeof(int));
 
     free(count);
 }
@@ -334,7 +335,7 @@ INLINE static void merge(DATA_TYPE *A, int l, int m, int r, DATA_TYPE *B) {
       i++;
     }
   }
-  memmove(B+l,A+l,(r-l+1)*sizeof(DATA_TYPE));
+  bcopy(B+l,A+l,(r-l+1)*sizeof(DATA_TYPE));
 }
 
 static void mergesort_r(DATA_TYPE *A, int l, int r, DATA_TYPE *B) {
@@ -558,7 +559,7 @@ INLINE static void mergesort_nr(DATA_TYPE *A, int elems) {
   
   finlist = mergesort_nr_2(A, B, elems);
   if (finlist == B)
-    memmove(B,A,elems*sizeof(DATA_TYPE));
+    bcopy(B,A,elems*sizeof(DATA_TYPE));
 
   free(B);
   
@@ -713,7 +714,7 @@ INLINE static void radixsort_h3(DATA_TYPE *A, int elems) {
   
   finlist = radixsort_h_2(A, B, elems, 11);
   if (finlist == B)
-    memmove(B,A,elems*sizeof(DATA_TYPE));
+    bcopy(B,A,elems*sizeof(DATA_TYPE));
 
   free(B);
 }
@@ -727,7 +728,7 @@ INLINE static void radixsort_h4(DATA_TYPE *A, int elems) {
   
   finlist = radixsort_h_2(A, B, elems, 8);
   if (finlist == B)
-    memmove(B,A,elems*sizeof(DATA_TYPE));
+    bcopy(B,A,elems*sizeof(DATA_TYPE));
 
   free(B);
 }
@@ -1590,7 +1591,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     radixsort_3(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1599,7 +1600,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1615,7 +1616,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     radixsort_3_rev(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1624,7 +1625,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1640,7 +1641,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     radixsort_4(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1650,7 +1651,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1667,7 +1668,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     radixsort_4p(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1676,7 +1677,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1694,7 +1695,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     insertsort(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1703,7 +1704,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1720,7 +1721,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     qsort(list,elems,sizeof(int),intcompare);
   }
   total_time = get_seconds() - total_time;
@@ -1729,7 +1730,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1745,7 +1746,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     mergesort(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1754,7 +1755,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1770,7 +1771,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     mergesort_nr(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1779,7 +1780,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1795,7 +1796,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     radixsort_h3(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1804,7 +1805,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1821,7 +1822,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     radixsort_h4(list,elems);
   }
   total_time = get_seconds() - total_time;
@@ -1830,7 +1831,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1846,7 +1847,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     gnu_qsort(list,elems,sizeof(int),intcompare);
   }
   total_time = get_seconds() - total_time;
@@ -1855,7 +1856,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1871,7 +1872,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     quicksort_moret(elems, list);
   }
   total_time = get_seconds() - total_time;
@@ -1880,7 +1881,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1896,7 +1897,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     debian_quicksort(list,elems,sizeof(int),intcompare);
   }
   total_time = get_seconds() - total_time;
@@ -1905,7 +1906,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1921,7 +1922,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     bubbleSort(elems,list);
   }
   total_time = get_seconds() - total_time;
@@ -1930,7 +1931,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1946,7 +1947,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     selectionSort(elems,list);
   }
   total_time = get_seconds() - total_time;
@@ -1955,7 +1956,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1971,7 +1972,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     insertionSort2(elems,list);
   }
   total_time = get_seconds() - total_time;
@@ -1980,7 +1981,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
@@ -1996,7 +1997,7 @@ main(int argc, char **argv) {
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
     run_quickSort_3(elems,list);
   }
   total_time = get_seconds() - total_time;
@@ -2005,7 +2006,7 @@ main(int argc, char **argv) {
 
   over_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
-    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
   }
   over_time = get_seconds() - over_time;
 
