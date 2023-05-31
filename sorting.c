@@ -1399,6 +1399,20 @@ debian_quicksort (pbase, total_elems, size, cmp)
 
 /*************************************************************************/
 
+INLINE static void bubbleSort(int N, int* A)
+{
+  register int i, j, temp;
+
+  for (i = 0; i < N - 1; i++) {
+    for (j = 0; j < N - i - 1; j++) {
+      if (A[j] > A[j + 1]) {
+	temp = A[j];
+	A[j] = A[j + 1];
+	A[j + 1] = temp;
+      }
+    }
+  }
+}
 
 
 
@@ -1819,6 +1833,31 @@ main(int argc, char **argv) {
   total_time /= (double)LOOP_CNT;
 
   fprintf(stdout," elems: %12d \t   deb-qsort: %f\n",
+	  elems,total_time);
+
+/******************************************************************/
+
+/******************************************************************/
+
+  total_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+    bubbleSort(elems,list);
+  }
+  total_time = get_seconds() - total_time;
+  err = check_sort(list,elems);
+  if (!err) fprintf(stderr,"ERROR with bubbleSort\n");
+
+  over_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    memmove(originalList,list,elems*sizeof(DATA_TYPE));
+  }
+  over_time = get_seconds() - over_time;
+
+  total_time -= over_time;
+  total_time /= (double)LOOP_CNT;
+
+  fprintf(stdout," elems: %12d \t  bubblesort: %f\n",
 	  elems,total_time);
 
 /******************************************************************/
