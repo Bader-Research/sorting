@@ -1455,11 +1455,13 @@ INLINE static void insertionSort2(int N, int* A)
 
 /*************************************************************************/
 
-void swap_3(int* a, int* b) {
+void swap(int* a, int* b) {
   int temp = *a;
   *a = *b;
   *b = temp;
 }
+
+/*************************************************************************/
 
 int partition(int* A, int low, int high) {
   register int i, j;
@@ -1470,10 +1472,10 @@ int partition(int* A, int low, int high) {
   for (j = low; j <= high - 1; j++) {
     if (A[j] <= pivot) {
       i++;
-      swap_3(&A[i], &A[j]);
+      swap(&A[i], &A[j]);
     }
   }
-  swap_3(&A[i + 1], &A[high]);
+  swap(&A[i + 1], &A[high]);
   return (i + 1);
 }
 
@@ -1495,6 +1497,53 @@ INLINE static void run_quickSort_3(int N, int* A) {
   quickSort_3(A, 0, pi - 1);
   quickSort_3(A, pi + 1, N-1);
 }
+
+
+/*************************************************************************/
+
+// Heapify a subtree rooted with node i
+// n is the size of the heap 
+void heapify(int* arr, int n, int i) {
+    int largest = i;      // Initialize largest as root
+    int left = 2 * i + 1; // Left child
+    int right = 2 * i + 2; // Right child
+
+    // If left child is larger than root
+    if (left < n && arr[left] > arr[largest]) {
+        largest = left;
+    }
+
+    // If right child is larger than current largest
+    if (right < n && arr[right] > arr[largest]) {
+        largest = right;
+    }
+
+    // If largest is not root
+    if (largest != i) {
+        swap(&arr[i], &arr[largest]);
+
+        // Recursively heapify the affected sub-tree
+        heapify(arr, n, largest);
+    }
+}
+
+// Heapsort function
+INLINE static void heapsort(int* arr, int n) {
+    // Build the heap (rearrange the array)
+    for (int i = n / 2 - 1; i >= 0; i--) {
+        heapify(arr, n, i);
+    }
+
+    // Extract elements from the heap one by one
+    for (int i = n - 1; i > 0; i--) {
+        // Move the current root (largest element) to the end
+        swap(&arr[0], &arr[i]);
+
+        // Heapify the reduced heap
+        heapify(arr, i, 0);
+    }
+}
+
 
 
 /*************************************************************************/
@@ -2014,6 +2063,31 @@ main(int argc, char **argv) {
   total_time /= (double)LOOP_CNT;
 
   fprintf(stdout," elems: %12d \t  quicksort3: %f\n",
+	  elems,total_time);
+
+/******************************************************************/
+
+/******************************************************************/
+
+  total_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
+    heapsort(list, elems);
+  }
+  total_time = get_seconds() - total_time;
+  err = check_sort(list,elems);
+  if (!err) fprintf(stderr,"ERROR with heapsort\n");
+
+  over_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
+  }
+  over_time = get_seconds() - over_time;
+
+  total_time -= over_time;
+  total_time /= (double)LOOP_CNT;
+
+  fprintf(stdout," elems: %12d \t    heapsort: %f\n",
 	  elems,total_time);
 
 /******************************************************************/
