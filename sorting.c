@@ -1548,6 +1548,80 @@ INLINE static void heapsort(int* arr, int n) {
 
 /*************************************************************************/
 
+
+// Function to merge two sorted subarrays of arr[]
+// First subarray is arr[l..m]
+// Second subarray is arr[m+1..r]
+void merge2(int* arr, int l, int m, int r) {
+  int i, j, k;
+  int n1 = m - l + 1;
+  int n2 = r - m;
+
+  // Create temporary arrays
+  int* L = (int*)malloc(n1 * sizeof(int));
+  int* R = (int*)malloc(n2 * sizeof(int));
+
+  // Copy data to temporary arrays
+  for (i = 0; i < n1; i++)
+    L[i] = arr[l + i];
+  for (j = 0; j < n2; j++)
+    R[j] = arr[m + 1 + j];
+
+  // Merge the temporary arrays back into arr[l..r]
+  i = 0; // Initial index of first subarray
+  j = 0; // Initial index of second subarray
+  k = l; // Initial index of merged subarray
+  while (i < n1 && j < n2) {
+    if (L[i] <= R[j]) {
+      arr[k] = L[i];
+      i++;
+    }
+    else {
+      arr[k] = R[j];
+      j++;
+    }
+    k++;
+  }
+
+  // Copy the remaining elements of L[], if there are any
+  while (i < n1) {
+    arr[k] = L[i];
+    i++;
+    k++;
+  }
+
+  // Copy the remaining elements of R[], if there are any
+  while (j < n2) {
+    arr[k] = R[j];
+    j++;
+    k++;
+  }
+
+  // Free temporary arrays
+  free(L);
+  free(R);
+}
+
+// Non-recursive Merge Sort function
+void mergeSort2_nr(int* arr, int n) {
+  int curr_size;  // Current size of subarrays to be merged
+  int left_start; // Starting index of left subarray to be merged
+
+  // Merge subarrays in a bottom-up manner
+  for (curr_size = 1; curr_size <= n - 1; curr_size = 2 * curr_size) {
+    for (left_start = 0; left_start < n - 1; left_start += 2 * curr_size) {
+      int mid = left_start + curr_size - 1;
+      int right_end = (left_start + 2 * curr_size - 1) < (n - 1) ? (left_start + 2 * curr_size - 1) : (n - 1);
+      merge2(arr, left_start, mid, right_end);
+    }
+  }
+}
+
+
+
+/*************************************************************************/
+
+
 void create_input(DATA_TYPE *list, int elems) {
   int i;
 
@@ -1816,7 +1890,8 @@ main(int argc, char **argv) {
 
 /******************************************************************/
 
-/******************************************************************/
+#if 0
+  /******************************************************************/
 
   total_time = get_seconds();
   for (loop=0 ; loop<LOOP_CNT ; loop++) {
@@ -1840,6 +1915,7 @@ main(int argc, char **argv) {
 	  elems,total_time);
 
 /******************************************************************/
+#endif
 
 /******************************************************************/
 
@@ -2088,6 +2164,31 @@ main(int argc, char **argv) {
   total_time /= (double)LOOP_CNT;
 
   fprintf(stdout," elems: %12d \t    heapsort: %f\n",
+	  elems,total_time);
+
+/******************************************************************/
+
+  /******************************************************************/
+
+  total_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
+    mergeSort2_nr(list, elems);
+  }
+  total_time = get_seconds() - total_time;
+  err = check_sort(list,elems);
+  if (!err) fprintf(stderr,"ERROR with mergeSort_nr\n");
+
+  over_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
+  }
+  over_time = get_seconds() - over_time;
+
+  total_time -= over_time;
+  total_time /= (double)LOOP_CNT;
+
+  fprintf(stdout," elems: %12d \t    mSort_nr: %f\n",
 	  elems,total_time);
 
 /******************************************************************/
