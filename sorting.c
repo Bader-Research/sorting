@@ -1704,6 +1704,95 @@ void timSort(int* arr, int n) {
 
 /*************************************************************************/
 
+// SmoothSort
+ 
+// Define the Leonardo numbers
+int leonardo(int k) {
+  if (k < 2) {
+    return 1;
+  }
+  return leonardo(k - 1) + leonardo(k - 2) + 1;
+}
+ 
+// Build the Leonardo heap by merging
+// pairs of adjacent trees
+void heapify_ss(int* arr, int start, int end) {
+  int i = start;
+  int j = 0;
+  int k = 0;
+ 
+  while (k < end - start + 1) {
+    if (k & 0xAAAAAAAA) {
+      j = j + i;
+      i = i >> 1;
+    }
+    else {
+      i = i + j;
+      j = j >> 1;
+    }
+ 
+    k = k + 1;
+  }
+ 
+  while (i > 0) {
+    j = j >> 1;
+    k = i + j;
+    while (k < end) {
+      if (arr[k] > arr[k - i]) {
+	break;
+      }
+      swap(&arr[k], &arr[k - i]);
+      k = k + i;
+    }
+ 
+    i = j;
+  }
+}
+ 
+// Smooth Sort function
+void smoothSort(int* arr, int n)
+{
+  int p = n - 1;
+  int q = p;
+  int r = 0;
+ 
+    // Build the Leonardo heap by merging
+    // pairs of adjacent trees
+  while (p > 0) {
+    if ((r & 0x03) == 0) {
+      heapify_ss(arr, r, q);
+    }
+ 
+    if (leonardo(r) == p) {
+      r = r + 1;
+    }
+    else {
+      r = r - 1;
+      q = q - leonardo(r);
+      heapify_ss(arr, r, q);
+      q = r - 1;
+      r = r + 1;
+    }
+ 
+    swap(&arr[0], &arr[p]);
+    p = p - 1;
+  }
+ 
+    // Convert the Leonardo heap
+    // back into an array
+  for (int i = 0; i < n - 1; i++) {
+    int j = i + 1;
+    while (j > 0 && arr[j] < arr[j - 1]) {
+      swap(&arr[j], &arr[j - 1]);
+      j = j - 1;
+    }
+  }
+ }
+ 
+
+
+/*************************************************************************/
+
 
 void create_input(DATA_TYPE *list, int elems) {
   int i;
@@ -2301,6 +2390,31 @@ main(int argc, char **argv) {
 
 /******************************************************************/
 
+/******************************************************************/
+
+  total_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
+    smoothSort(list, elems);
+  }
+  total_time = get_seconds() - total_time;
+  err = check_sort(list,elems);
+  if (!err) fprintf(stderr,"ERROR with timSort\n");
+
+  over_time = get_seconds();
+  for (loop=0 ; loop<LOOP_CNT ; loop++) {
+    bcopy(originalList,list,elems*sizeof(DATA_TYPE));
+  }
+  over_time = get_seconds() - over_time;
+
+  total_time -= over_time;
+  total_time /= (double)LOOP_CNT;
+
+  fprintf(stdout," elems: %12d \t  smoothSort: %f\n",
+	  elems,total_time);
+
+/******************************************************************/
+  
   free(originalList);
   free(list);
   return(0);
